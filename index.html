@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PixiTest</title>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Scripts -->
+    <script src="app.js" charset="utf-8"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        var stage = new pixi.Container(),
+            renderer = pixi.autoDetectRenderer(
+            256, 256,
+            {antialias: false, transparent: false, resolution: 1}
+        );
+
+        renderer.backgroundColor = 0x061639;
+        document.body.appendChild(renderer.view);
+
+        pixi.loader
+            .add("img/cat.png")
+            .load(setup);
+
+        let cat;
+        let catMoveRight = true;
+        let rotationSpeed = 0;
+
+        function setup() {
+            cat = new pixi.Sprite(
+                pixi.loader.resources["img/cat.png"].texture
+            );
+
+            cat.anchor.set(0.5, 0.5);
+
+            stage.addChild(cat);
+            gameLoop();
+        }
+
+        function gameLoop() {
+            requestAnimationFrame(gameLoop);
+
+            cat.rotation += rotationSpeed;
+            rotationSpeed += 0.0005;
+
+            if(catMoveRight) {
+                cat.x++;
+                cat.y++;
+            } else {
+                cat.x--;
+                cat.y--;
+            }
+
+            if(rotationSpeed > 1) {
+                if(catMoveRight) {
+                    if(cat.x > renderer.width / 2) {
+                        cat.x = width / 2;
+                        cat.y = height / 2;
+                        cat.scale.x++;
+                        cat.scale.y++;
+                    }
+                } else {
+                    if(cat.x < renderer.width / 2) {
+                        cat.x = width / 2;
+                        cat.y = height / 2;
+                        cat.scale.x++;
+                        cat.scale.y++;
+                    }
+                }
+            }
+
+            if((cat.x > renderer.width && cat.y > renderer.height) || (cat.x < 0 && cat.y < 0)) {
+                catMoveRight = !catMoveRight;
+            }
+
+
+            renderer.render(stage);
+        }
+
+    </script>
+</body>
+
+</html>
